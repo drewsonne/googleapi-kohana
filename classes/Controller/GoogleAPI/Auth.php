@@ -23,7 +23,8 @@ class Controller_GoogleAPI_Auth extends Controller {
                 \Kohana_Session::instance()->set($isLoggedInSession, true);
             }
 
-            if(empty($redirectUrl)) {
+            $redirectUrl = $config->get('post_auth_url', null);
+            if(!is_null($redirectUrl)) {
                 $redirectUrl = Request::$current->detect_uri();
             }
 			HTTP::redirect($redirectUrl);
