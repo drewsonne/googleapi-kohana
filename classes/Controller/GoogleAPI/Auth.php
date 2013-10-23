@@ -1,14 +1,14 @@
 <?php
 
-class Controller_GoogleAPI_Auth extends Controller {
-	
-	function action_auth()
-	{
-		if (isset($_GET['code']))
-		{
+class Controller_GoogleAPI_Auth extends Controller
+{
+
+    function action_auth()
+    {
+        if (isset($_GET['code'])) {
             $gplus = GPlus::instance();
             $gplus->client->authenticateCode();
-            if($gplus->client->isAccessTokenExpired()) {
+            if ($gplus->client->isAccessTokenExpired()) {
                 session_destroy();
                 $newAccessToken = json_decode($gplus->client->getAccessToken());
                 $gplus->client->refreshToken($newAccessToken->refresh_token);
@@ -18,20 +18,18 @@ class Controller_GoogleAPI_Auth extends Controller {
             $isLoggedInSession = $config->get('is_logged_in', null);
             $redirectUrl = $config->get('post_auth_url', null);
 
-            if(!is_null($isLoggedInSession)) {
+            if (!$isLoggedInSession) {
                 $user = $gplus->getUser();
                 \Kohana_Session::instance()->set($isLoggedInSession, true);
             }
 
-            if(!is_null($redirectUrl)) {
+            if (is_null($redirectUrl)) {
                 $redirectUrl = Request::$current->detect_uri();
             }
 
-			HTTP::redirect($redirectUrl);
-		}
-		else
-		{
-			$this->response->body('<script>window.close();</script>');
-		}
-	}
+            HTTP::redirect($redirectUrl);
+        } else {
+            $this->response->body('<script>window.close();</script>');
+        }
+    }
 }
