@@ -18,7 +18,7 @@ class Controller_GoogleAPI_Auth extends Controller
             $isLoggedInSession = $config->get('is_logged_in', null);
             $redirectUrl = $config->get('post_auth_url', null);
 
-            if (!is_null($isLoggedInSession) && !$isLoggedInSession) {
+            if (!is_null($isLoggedInSession) || !$isLoggedInSession) {
                 $user = $gplus->getUser();
                 \Kohana_Session::instance()->set($isLoggedInSession, true);
             }
